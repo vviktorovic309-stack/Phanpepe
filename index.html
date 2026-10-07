@@ -3,9 +3,8 @@
 <head>
 <meta charset="utf-8">
 <title>Ghost Candles</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
 :root{--bg:#070b10;--mint:#7dffb8;--up:#2ee59d;--down:#ff4d6a;--gold:#ffc83d;--ink:#e8fff3;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -44,8 +43,10 @@ const $=id=>document.getElementById(id);
 let W,H=640,S,dpr;
 function resize(){dpr=Math.min(devicePixelRatio||1,2);cv.width=innerWidth*dpr;cv.height=innerHeight*dpr;S=innerHeight/H;W=innerWidth/S}
 addEventListener('resize',resize);resize();
-const TG=window.Telegram&&Telegram.WebApp;
-try{if(TG){TG.ready();TG.expand();TG.disableVerticalSwipes&&TG.disableVerticalSwipes();TG.setBackgroundColor&&TG.setBackgroundColor('#1a1b1d');TG.setHeaderColor&&TG.setHeaderColor('#1a1b1d')}}catch(e){}
+let TG=null;
+function initTG(){try{TG=window.Telegram&&Telegram.WebApp;if(TG){TG.ready();TG.expand();TG.disableVerticalSwipes&&TG.disableVerticalSwipes();TG.setBackgroundColor&&TG.setBackgroundColor('#1a1b1d');TG.setHeaderColor&&TG.setHeaderColor('#1a1b1d')}}catch(e){}}
+try{const ts=document.createElement('script');ts.src='https://telegram.org/js/telegram-web-app.js';ts.async=true;ts.onload=initTG;document.head.appendChild(ts)}catch(e){}
+addEventListener('error',e=>{const d=document.createElement('div');d.style.cssText='position:fixed;left:8px;right:8px;bottom:8px;z-index:9;font:11px monospace;color:#ff6b84;background:#000a;padding:6px';d.textContent='Ошибка: '+e.message;document.body.appendChild(d)});
 const hap=k=>{try{TG.HapticFeedback.impactOccurred(k)}catch(e){}};
 
 const CW=52,R=19,GW=64,GH=GW*300/280;
